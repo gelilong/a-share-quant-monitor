@@ -128,11 +128,30 @@ class ChartRenderer {
     const chart = echarts.init(container);
     this.charts[containerId] = chart;
     
-    // 判断数据格式
-    const isMultiBar = config.fields && config.fields.length > 0;
-    
+    // 检测是否 ETF 资金流数据结构 (etf_flows 数组)
+    let xData = [];
+    let yData = [];
     let series = [];
-    if (isMultiBar) {
+    
+    if (data.etf_flows && Array.isArray(data.etf_flows)) {
+      // ETF 资金流：从 etf_flows 数组提取
+      const labelField = config.barLabelField || 'sector';
+      const valueField = config.barValueField || 'flow_indicator';
+      xData = data.etf_flows.map(item => item[labelField] || '');
+      yData = data.etf_flows.map(item => item[valueField] || 0);
+      series = [{
+        type: 'bar',
+        data: yData.map(v => ({
+          value: v,
+          itemStyle: {
+            color: v >= 0 ? '#52c41a' : '#ff4d4f',
+            borderRadius: v >= 0 ? [4, 4, 0, 0] : [0, 0, 4, 4]
+          }
+        }))
+      }];
+    } else if (config.fields && config.fields.length > 0) {
+      // 多柱模式
+      xData = data.dates || data.labels || [];
       series = config.fields.map(f => ({
         name: f.label,
         type: 'bar',
@@ -140,6 +159,8 @@ class ChartRenderer {
         itemStyle: { color: f.color, borderRadius: [4, 4, 0, 0] }
       }));
     } else {
+      // 简单单柱模式
+      xData = data.dates || data.labels || [];
       series = [{
         type: 'bar',
         data: data.values || [],
@@ -153,6 +174,9 @@ class ChartRenderer {
       }];
     }
     
+    const isMultiBar = config.fields && config.fields.length > 0;
+    const isEtfFlow = data.etf_flows && Array.isArray(data.etf_flows);
+
     const option = {
       backgroundColor: '#fff',
       title: {
@@ -164,7 +188,7 @@ class ChartRenderer {
         trigger: 'axis',
         axisPointer: { type: 'shadow' }
       },
-      legend: isMultiBar ? {
+      legend: (isMultiBar && !isEtfFlow) ? {
         data: config.fields.map(f => f.label),
         bottom: 0
       } : undefined,
@@ -172,11 +196,11 @@ class ChartRenderer {
         left: '8%',
         right: '5%',
         top: '15%',
-        bottom: isMultiBar ? '12%' : '8%'
+        bottom: isEtfFlow ? '5%' : (isMultiBar ? '12%' : '8%')
       },
       xAxis: {
         type: 'category',
-        data: data.dates || data.labels || [],
+        data: xData,
         axisLabel: { rotate: 45, fontSize: 9 }
       },
       yAxis: {
@@ -203,6 +227,18 @@ class ChartRenderer {
     
     const chart = echarts.init(container);
     this.charts[containerId] = chart;
+
+    const minVal = config.min || 0;
+    const maxVal = config.max || 100;
+    const range = maxVal - minVal;
+    // 动态计算三段阈值位置（归一化到 0-1）
+    const t1 = (0.3 * range + minVal - minVal) / range; // 30%处
+    const t2 = (0.7 * range + minVal - minVal) / range; // 70%处
+    
+    // 如果 min 为负，反转颜色（低值=绿/正相关防御，高值=红/正相关风险）
+    const colors = minVal < 0
+      ? [[t1, '#ee6666'], [t2, '#faad14'], [1, '#52c41a']]
+      : [[t1, '#52c41a'], [t2, '#faad14'], [1, '#ee6666']];
     
     const option = {
       backgroundColor: '#fff',
@@ -217,19 +253,12 @@ class ChartRenderer {
         endAngle: -30,
         center: ['50%', '60%'],
         radius: '85%',
-        min: config.min || 0,
-        max: config.max || 100,
+        min: minVal,
+        max: maxVal,
         splitNumber: 10,
         axisLine: {
           show: true,
-          lineStyle: {
-            width: 20,
-            color: [
-              [0.3, '#52c41a'],
-              [0.7, '#faad14'],
-              [1, '#ee6666']
-            ]
-          }
+          lineStyle: { width: 20, color: colors }
         },
         pointer: {
           icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
@@ -242,7 +271,9 @@ class ChartRenderer {
         axisLabel: { distance: 35, fontSize: 10 },
         detail: {
           valueAnimation: true,
-          formatter: config.formatter || '{value}' + (config.unit || ''),
+          formatter: config.formatter || function(v) {
+            return v.toFixed(config.decimals || 0) + (config.unit || '');
+          },
           fontSize: 24,
           offsetCenter: [0, '70%']
         },

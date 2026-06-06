@@ -99,8 +99,10 @@ const INDICATOR_CONFIG = {
         chartHeight: 300,
         fields: [
           { key: 'dates', label: '日期', type: 'x' },
-          { key: 'rates', label: 'CNH汇率', type: 'y', color: '#5470c6' }
+          { key: 'rates', label: 'CNH汇率', type: 'y', color: '#5470c6' },
+          { key: 'change_rates', label: '日变动率(%)', type: 'y2', color: '#ee6666' }
         ],
+        y2AxisName: '变动率(%)',
         description: `衡量全球风险偏好及外资回流斜率。离岸人民币（CNH）汇率是外资配置A股的重要先行指标。
 
 <b>监控逻辑：</b>
@@ -131,6 +133,10 @@ const INDICATOR_CONFIG = {
         dataKey: 'capital.erp',
         chartType: 'gauge',
         chartHeight: 350,
+        gaugeMin: -3,
+        gaugeMax: 3,
+        gaugeUnit: 'σ',
+        gaugeDecimals: 2,
         fields: [
           { key: 'dates', label: '日期', type: 'x' },
           { key: 'erp_values', label: 'ERP(%)', type: 'y', color: '#ee6666' }
@@ -201,12 +207,14 @@ const INDICATOR_CONFIG = {
         name: '成交额与换手率',
         fullName: '全市场日成交额绝对值与换手率',
         dataKey: 'capital.market_volume',
-        chartType: 'bar',
+        chartType: 'line',
         chartHeight: 300,
         fields: [
           { key: 'dates', label: '日期', type: 'x' },
-          { key: 'volume', label: '成交额(亿元)', type: 'y', color: '#3ba272' }
+          { key: 'volume', label: '成交额(亿)', type: 'y', color: '#3ba272' },
+          { key: 'turnover_rate', label: '换手率(%)', type: 'y2', color: '#ee6666' }
         ],
+        y2AxisName: '换手率(%)',
         description: `市场的容量过滤器。成交额是A股行情级别的最直观标尺，量能决定策略的适用性。
 
 <b>监控逻辑：</b>
@@ -261,8 +269,13 @@ const INDICATOR_CONFIG = {
         dataKey: 'microstructure.market_breadth',
         chartType: 'gauge',
         chartHeight: 350,
+        gaugeMin: 0,
+        gaugeMax: 100,
+        gaugeUnit: '%',
         fields: [],
         description: `极其重要的前瞻性反指。即使大盘指数还在跌（被权重股拖累），但如果站上均线的个股比例开始回升，说明赚钱效应已提前复苏。
+
+仪表盘显示站上<b>20日均线</b>的比例，站上<b>60日均线</b>比例通常在右侧信息栏查看。
 
 <b>监控逻辑：</b>
 • 指数下跌 + 站上20日线比例上升 → 底背离，积极信号
@@ -288,6 +301,8 @@ const INDICATOR_CONFIG = {
         ],
         description: `监控本土短线活跃游资的情绪温度。游资是A股市场情绪最敏感的群体，其行为模式具有高度周期性。
 
+柱状图展示涨停(红)与跌停(蓝)家数对比，连板晋级率见下方当前值。
+
 <b>监控逻辑：</b>
 • 连板晋级率持续低位（<15%）→ 短线情绪冰点，往往对应指数阶段性拐点
 • 涨停家数>100家 + 晋级率>30% → 短线赚钱效应强，趋势策略可积极
@@ -304,7 +319,11 @@ const INDICATOR_CONFIG = {
         fullName: '股债相关性轮动指数',
         dataKey: 'microstructure.correlation_index',
         chartType: 'gauge',
-        chartHeight: 300,
+        chartHeight: 320,
+        gaugeMin: -1,
+        gaugeMax: 1,
+        gaugeUnit: '',
+        gaugeDecimals: 3,
         fields: [],
         description: `监控股债"跷跷板"效应的强度和方向。大类资产配置资金的流动往往在股债相关性变化中提前反映。
 
@@ -371,8 +390,10 @@ const INDICATOR_CONFIG = {
         fullName: '行业ETF净申购份额变动',
         dataKey: 'sector.etf_flow',
         chartType: 'bar',
-        chartHeight: 300,
+        chartHeight: 360,
         fields: [],
+        barLabelField: 'sector',
+        barValueField: 'flow_indicator',
         description: `机构资金通过ETF进行行业配置的痕迹。行业ETF份额变动反映了专业投资者的行业偏好。
 
 <b>监控逻辑：</b>
@@ -392,8 +413,9 @@ const INDICATOR_CONFIG = {
           { key: 'dates', label: '日期', type: 'x' },
           { key: 'cpi', label: 'CPI(%)', type: 'y', color: '#5470c6' },
           { key: 'ppi', label: 'PPI(%)', type: 'y', color: '#ee6666' },
-          { key: 'spread', label: '剪刀差(%)', type: 'y', color: '#91cc75' }
+          { key: 'spread', label: '剪刀差(%)', type: 'y2', color: '#91cc75' }
         ],
+        y2AxisName: '剪刀差(%)',
         description: `宏观产业结构指标。PPI-CPI剪刀差反映了上下游利润分配格局，是行业配置的宏观指南针。
 
 <b>监控逻辑：</b>

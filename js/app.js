@@ -380,13 +380,15 @@ class App {
             });
             break;
           case 'gauge':
-            const gaugeValue = this.extractGaugeValue(indicatorData, indicator.id);
+            const gaugeValue = this.extractGaugeValue(indicatorData, indicator);
             chartRenderer.renderGaugeChart(chartId, gaugeValue, {
               name: indicator.name,
               subtitle: indicator.fullName,
               min: indicator.gaugeMin || 0,
               max: indicator.gaugeMax || 100,
-              unit: indicator.gaugeUnit || '%'
+              unit: indicator.gaugeUnit || '%',
+              formatter: indicator.gaugeDecimals ? `{value}${indicator.gaugeUnit||''}` : undefined,
+              decimals: indicator.gaugeDecimals || 0
             });
             break;
           case 'heatmap':
@@ -403,14 +405,14 @@ class App {
   /**
    * 提取仪表盘显示值
    */
-  extractGaugeValue(data, indicatorId) {
-    switch (indicatorId) {
+  extractGaugeValue(data, indicator) {
+    switch (indicator.id) {
       case 'market_breadth':
         return data.above_ma20_ratio || 0;
       case 'correlation_index':
-        return ((data.correlation || 0) + 1) * 50;  // -1~1 映射到 0~100
+        return data.correlation || 0;
       case 'erp':
-        return ((data.sigma_position || 0) + 3) * (100 / 6); // -3~3 映射到 0~100
+        return data.sigma_position || 0;
       default:
         return data.latest || data.value || 50;
     }

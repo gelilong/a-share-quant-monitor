@@ -4,7 +4,7 @@
     "layer_name": "个股微观结构",
     "description": "监控个股订单流、波动率、主力资金及技术位置",
     "update_time": "2026-06-06 13:30:00",
-    "total_stocks": 12
+    "total_stocks": 13
   },
   "stocks": [
     {
@@ -23,11 +23,25 @@
       "ma60": 1580.0,
       "score": 3.0,
       "action": "买入",
-      "reasons": [
-        "OFI偏多",
-        "站上20日均线",
-        "放量"
-      ]
+      "reasons": ["OFI偏多", "站上20日均线", "放量"]
+    },
+    {
+      "code": "600584",
+      "name": "长电科技",
+      "latest_price": 38.50,
+      "change_5d": 5.2,
+      "change_20d": 12.8,
+      "ofi": 16.5,
+      "idio_volatility": 32.5,
+      "beta": 1.42,
+      "large_order_ratio": 138.0,
+      "stop_loss_distance": 7.8,
+      "ma5": 37.5,
+      "ma20": 35.0,
+      "ma60": 33.0,
+      "score": 3.5,
+      "action": "买入",
+      "reasons": ["OFI偏多", "站上20日均线", "放量"]
     },
     {
       "code": "300750",
