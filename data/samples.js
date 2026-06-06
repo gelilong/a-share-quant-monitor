@@ -1,4 +1,4 @@
-// 内嵌样本数据 — 支持 file:// 协议直接加载
+// 内嵌样本数据
 const SAMPLE_DATA = {
   "macro": {
     "meta": {
