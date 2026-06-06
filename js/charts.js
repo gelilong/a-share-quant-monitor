@@ -17,13 +17,19 @@ class ChartRenderer {
    */
   renderLineChart(containerId, data, config) {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container) { console.warn('Line chart container not found:', containerId); return; }
+    
+    if (!window.echarts) { console.error('ECharts not loaded'); return; }
     
     if (this.charts[containerId]) {
       this.charts[containerId].dispose();
     }
+
+    // 确保容器有明确尺寸（Safari 兼容）
+    container.style.height = (config.chartHeight || 300) + 'px';
+    container.style.width = '100%';
     
-    const chart = echarts.init(container);
+    const chart = window.echarts.init(container);
     this.charts[containerId] = chart;
     
     const option = {
@@ -110,7 +116,8 @@ class ChartRenderer {
       });
     }
     
-    chart.setOption(option);
+    try { chart.setOption(option); } catch(e) { console.error("Chart setOption failed:", e); }
+    setTimeout(function() { chart.resize(); }, 100);
     return chart;
   }
 
@@ -119,13 +126,18 @@ class ChartRenderer {
    */
   renderBarChart(containerId, data, config) {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container) { console.warn('Bar chart container not found:', containerId); return; }
+    
+    if (!window.echarts) { console.error('ECharts not loaded'); return; }
     
     if (this.charts[containerId]) {
       this.charts[containerId].dispose();
     }
+
+    container.style.height = (config.chartHeight || 300) + 'px';
+    container.style.width = '100%';
     
-    const chart = echarts.init(container);
+    const chart = window.echarts.init(container);
     this.charts[containerId] = chart;
     
     // 检测是否 ETF 资金流数据结构 (etf_flows 数组)
@@ -165,7 +177,7 @@ class ChartRenderer {
         type: 'bar',
         data: data.values || [],
         itemStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          color: new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: '#5470c6' },
             { offset: 1, color: '#91cc75' }
           ]),
@@ -210,7 +222,8 @@ class ChartRenderer {
       series: series
     };
     
-    chart.setOption(option);
+    try { chart.setOption(option); } catch(e) { console.error("Chart setOption failed:", e); }
+    setTimeout(function() { chart.resize(); }, 100);
     return chart;
   }
 
@@ -219,13 +232,18 @@ class ChartRenderer {
    */
   renderGaugeChart(containerId, value, config) {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container) { console.warn('Gauge container not found:', containerId); return; }
+    
+    if (!window.echarts) { console.error('ECharts not loaded'); return; }
     
     if (this.charts[containerId]) {
       this.charts[containerId].dispose();
     }
+
+    container.style.height = (config.chartHeight || 350) + 'px';
+    container.style.width = '100%';
     
-    const chart = echarts.init(container);
+    const chart = window.echarts.init(container);
     this.charts[containerId] = chart;
 
     const minVal = config.min || 0;
@@ -281,7 +299,8 @@ class ChartRenderer {
       }]
     };
     
-    chart.setOption(option);
+    try { chart.setOption(option); } catch(e) { console.error("Chart setOption failed:", e); }
+    setTimeout(function() { chart.resize(); }, 100);
     return chart;
   }
 
@@ -290,13 +309,18 @@ class ChartRenderer {
    */
   renderHeatmapChart(containerId, sectorData, config) {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container) { console.warn('Heatmap container not found:', containerId); return; }
+    
+    if (!window.echarts) { console.error('ECharts not loaded'); return; }
     
     if (this.charts[containerId]) {
       this.charts[containerId].dispose();
     }
+
+    container.style.height = (config.chartHeight || 400) + 'px';
+    container.style.width = '100%';
     
-    const chart = echarts.init(container);
+    const chart = window.echarts.init(container);
     this.charts[containerId] = chart;
     
     // 构建热力图数据
@@ -379,7 +403,8 @@ class ChartRenderer {
       }]
     };
     
-    chart.setOption(option);
+    try { chart.setOption(option); } catch(e) { console.error("Chart setOption failed:", e); }
+    setTimeout(function() { chart.resize(); }, 100);
     return chart;
   }
 
@@ -533,11 +558,15 @@ class ChartRenderer {
   renderDR007Quadrant(tsContainerId, qdContainerId, data, config) {
     const policyRate = config.policyRate || 1.50;
 
+    if (!window.echarts) { console.error('ECharts not loaded for DR007'); return; }
+
     // ── 1. 时间序列图 ──
     const tsContainer = document.getElementById(tsContainerId);
     if (tsContainer) {
+      tsContainer.style.height = '380px';
+      tsContainer.style.width = '100%';
       if (this.charts[tsContainerId]) this.charts[tsContainerId].dispose();
-      const tsChart = echarts.init(tsContainer);
+      const tsChart = window.echarts.init(tsContainer);
       this.charts[tsContainerId] = tsChart;
 
       const dates = data.dates || [];
@@ -548,7 +577,8 @@ class ChartRenderer {
       // 政策利率为常量水平线
       const policyLine = new Array(n).fill(policyRate);
 
-      tsChart.setOption({
+      try {
+        tsChart.setOption({
         backgroundColor: '#fff',
         title: {
           text: 'DR007 时间序列与利差',
@@ -629,13 +659,17 @@ class ChartRenderer {
           }
         ]
       });
+      } catch(e) { console.error('DR007 time series chart error:', e); }
+      setTimeout(function() { tsChart.resize(); }, 100);
     }
 
     // ── 2. 象限散点图 ──
     const qdContainer = document.getElementById(qdContainerId);
     if (qdContainer) {
+      qdContainer.style.height = '380px';
+      qdContainer.style.width = '100%';
       if (this.charts[qdContainerId]) this.charts[qdContainerId].dispose();
-      const qdChart = echarts.init(qdContainer);
+      const qdChart = window.echarts.init(qdContainer);
       this.charts[qdContainerId] = qdChart;
 
       const dr007Vals = data.week_1 || [];
@@ -653,7 +687,8 @@ class ChartRenderer {
       const xMax = Math.max(policyRate + 0.5, Math.max(...dr007Vals));
       const yAbsMax = Math.max(Math.abs(Math.min(...spreadVals)), Math.abs(Math.max(...spreadVals)), 20);
 
-      qdChart.setOption({
+      try {
+        qdChart.setOption({
         backgroundColor: '#fff',
         title: {
           text: '利差象限分析 (X=DR007绝对水平, Y=利差)',
@@ -738,6 +773,8 @@ class ChartRenderer {
           }
         ]
       });
+      } catch(e) { console.error('DR007 quadrant chart error:', e); }
+      setTimeout(function() { qdChart.resize(); }, 100);
     }
   }
 
