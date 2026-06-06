@@ -199,7 +199,44 @@ class App {
    */
   renderIndicatorCard(indicator, dataKey, idx) {
     const chartId = `chart_${indicator.id}_${idx}`;
-    
+
+    // DR007 象限分析特殊处理：两个图表容器
+    if (indicator.chartType === 'dr007_quadrant') {
+      const tsChartId = `${chartId}_ts`;
+      const qdChartId = `${chartId}_qd`;
+      return `
+        <div class="indicator-card">
+          <div class="indicator-card-header">
+            <h3 class="indicator-name">${indicator.name}</h3>
+            <span class="indicator-fullname">${indicator.fullName}</span>
+          </div>
+          <div class="indicator-card-body dr007-body">
+            <div class="dr007-charts">
+              <div class="chart-container" id="${tsChartId}"></div>
+              <div class="chart-container" id="${qdChartId}"></div>
+            </div>
+            <div class="indicator-info">
+              <div class="indicator-desc">
+                <h4>📖 指标说明</h4>
+                <div class="desc-content">${indicator.description}</div>
+              </div>
+              ${indicator.signals && indicator.signals.length > 0 ? `
+                <div class="indicator-signals">
+                  <h4>🎯 信号解读</h4>
+                  ${indicator.signals.map(s => `
+                    <div class="signal-item" style="border-left: 3px solid ${s.color}">
+                      <span class="signal-condition">${s.condition}</span>
+                      <span class="signal-level" style="color: ${s.color}">→ ${s.level}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     return `
       <div class="indicator-card">
         <div class="indicator-card-header">
@@ -320,6 +357,14 @@ class App {
         if (!indicatorData) return;
         
         switch (indicator.chartType) {
+          case 'dr007_quadrant':
+            chartRenderer.renderDR007Quadrant(
+              `${chartId}_ts`,
+              `${chartId}_qd`,
+              indicatorData,
+              { policyRate: indicator.policyRate || 1.50 }
+            );
+            break;
           case 'line':
             chartRenderer.renderLineChart(chartId, indicatorData, {
               name: indicator.name,

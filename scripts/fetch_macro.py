@@ -15,23 +15,48 @@ def ensure_data_dir():
     os.makedirs(DATA_DIR, exist_ok=True)
 
 def fetch_dr007():
-    """获取DR007银行间7天质押式回购利率"""
+    """获取DR007银行间7天质押式回购利率及利差分析"""
+    # 7天逆回购政策利率（央行公开市场7天期逆回购操作利率）
+    POLICY_RATE = 1.50  # 当前政策利率，可根据实际调整
+    
     try:
         # 使用Shibor隔夜和7天利率作为近似
         df = ak.macro_china_shibor_all()
         if df is not None and not df.empty:
-            # 尝试获取DR007相关数据
             recent = df.tail(60)
+            week1_vals = recent['1W-定价'].tolist() if '1W-定价' in recent.columns else []
+            
+            # 计算利差 (DR007 - 政策利率)，单位转换成bp
+            spread_vals = [round((v - POLICY_RATE) * 100, 1) for v in week1_vals] if week1_vals else []
+            
+            latest_week1 = float(recent['1W-定价'].iloc[-1]) if '1W-定价' in recent.columns else None
+            latest_spread = round((latest_week1 - POLICY_RATE) * 100, 1) if latest_week1 else None
+            
+            # 判断利差信号
+            if latest_spread is not None:
+                if latest_spread < -10:
+                    spread_signal = '极度宽松'
+                elif latest_spread <= 5:
+                    spread_signal = '中性'
+                else:
+                    spread_signal = '偏紧收紧'
+            else:
+                spread_signal = '未知'
+            
             return {
-                'dates': recent['日期'].astype(str).tolist() if '日期' in df.columns else [],
+                'dates': recent['日期'].astype(str).tolist() if '日期' in recent.columns else [],
                 'overnight': recent['O/N-定价'].tolist() if 'O/N-定价' in recent.columns else [],
-                'week_1': recent['1W-定价'].tolist() if '1W-定价' in recent.columns else [],
-                'latest': float(recent['1W-定价'].iloc[-1]) if '1W-定价' in recent.columns else None,
+                'week_1': week1_vals,
+                'spread': spread_vals,
+                'policy_rate': POLICY_RATE,
+                'latest': latest_week1,
+                'latest_spread': latest_spread,
+                'spread_signal': spread_signal,
                 'update_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
     except Exception as e:
         print(f"DR007数据获取失败: {e}")
-    return {'dates': [], 'overnight': [], 'week_1': [], 'latest': None, 'update_time': ''}
+    return {'dates': [], 'overnight': [], 'week_1': [], 'spread': [], 'policy_rate': POLICY_RATE, 'latest': None, 'latest_spread': None, 'spread_signal': '未知', 'update_time': ''}
 
 def fetch_bond_yield():
     """获取10年期国债收益率"""

@@ -493,6 +493,224 @@ class ChartRenderer {
   }
 
   /**
+   * 渲染 DR007 象限分析图（时间序列 + 象限散点）
+   * @param {string} tsContainerId - 时间序列图容器ID
+   * @param {string} qdContainerId - 象限散点图容器ID
+   * @param {object} data - DR007 数据
+   * @param {object} config - 指标配置
+   */
+  renderDR007Quadrant(tsContainerId, qdContainerId, data, config) {
+    const policyRate = config.policyRate || 1.50;
+
+    // ── 1. 时间序列图 ──
+    const tsContainer = document.getElementById(tsContainerId);
+    if (tsContainer) {
+      if (this.charts[tsContainerId]) this.charts[tsContainerId].dispose();
+      const tsChart = echarts.init(tsContainer);
+      this.charts[tsContainerId] = tsChart;
+
+      const dates = data.dates || [];
+      const n = dates.length;
+      const dr007 = data.week_1 || [];
+      const spreadData = data.spread || [];
+
+      // 政策利率为常量水平线
+      const policyLine = new Array(n).fill(policyRate);
+
+      tsChart.setOption({
+        backgroundColor: '#fff',
+        title: {
+          text: 'DR007 时间序列与利差',
+          left: 'center',
+          textStyle: { fontSize: 13, color: '#333' }
+        },
+        tooltip: {
+          trigger: 'axis',
+          formatter: function(params) {
+            let html = params[0].axisValue + '<br/>';
+            params.forEach(p => {
+              html += `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${p.color};margin-right:5px;"></span>`;
+              html += `${p.seriesName}: ${p.value}${p.seriesIndex < 2 ? '%' : 'bp'}<br/>`;
+            });
+            return html;
+          }
+        },
+        legend: {
+          data: ['DR007', '政策利率(7D逆回购)', '利差'],
+          bottom: 0
+        },
+        grid: { left: '8%', right: '12%', top: '15%', bottom: '14%' },
+        xAxis: {
+          type: 'category',
+          data: dates,
+          axisLabel: { rotate: 45, fontSize: 10 }
+        },
+        yAxis: [
+          {
+            type: 'value',
+            name: '利率(%)',
+            min: function(v) { return Math.floor(Math.min(v.min, policyRate - 0.3) * 10) / 10; },
+            axisLabel: { fontSize: 10 },
+            splitLine: { lineStyle: { color: '#f0f0f0', type: 'dashed' } }
+          },
+          {
+            type: 'value',
+            name: '利差(bp)',
+            axisLabel: { fontSize: 10 },
+            splitLine: { show: false }
+          }
+        ],
+        series: [
+          {
+            name: 'DR007',
+            type: 'line',
+            data: dr007,
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 4,
+            lineStyle: { width: 2.5, color: '#ee6666' },
+            itemStyle: { color: '#ee6666' },
+            markLine: {
+              silent: true,
+              symbol: 'none',
+              data: [{ yAxis: policyRate, label: { formatter: '政策利率 ' + policyRate + '%', position: 'end' }, lineStyle: { color: '#fc8452', type: 'dashed', width: 2 } }]
+            }
+          },
+          {
+            name: '政策利率(7D逆回购)',
+            type: 'line',
+            data: policyLine,
+            symbol: 'none',
+            lineStyle: { color: '#fc8452', type: 'dashed', width: 1.5, opacity: 0.6 },
+            itemStyle: { color: '#fc8452' }
+          },
+          {
+            name: '利差',
+            type: 'bar',
+            yAxisIndex: 1,
+            data: spreadData,
+            itemStyle: {
+              color: function(params) {
+                return params.value >= 0 ? '#ff4d4f' : '#52c41a';
+              },
+              borderRadius: [2, 2, 0, 0]
+            }
+          }
+        ]
+      });
+    }
+
+    // ── 2. 象限散点图 ──
+    const qdContainer = document.getElementById(qdContainerId);
+    if (qdContainer) {
+      if (this.charts[qdContainerId]) this.charts[qdContainerId].dispose();
+      const qdChart = echarts.init(qdContainer);
+      this.charts[qdContainerId] = qdChart;
+
+      const dr007Vals = data.week_1 || [];
+      const spreadVals = data.spread || [];
+
+      // 构建散点数据（最近N天的点）
+      const scatterData = [];
+      const len = Math.min(dr007Vals.length, spreadVals.length);
+      for (let i = 0; i < len; i++) {
+        scatterData.push([dr007Vals[i], spreadVals[i], dates[i] || '']);
+      }
+
+      // 确定轴范围
+      const xMin = Math.min(policyRate - 0.5, Math.min(...dr007Vals));
+      const xMax = Math.max(policyRate + 0.5, Math.max(...dr007Vals));
+      const yAbsMax = Math.max(Math.abs(Math.min(...spreadVals)), Math.abs(Math.max(...spreadVals)), 20);
+
+      qdChart.setOption({
+        backgroundColor: '#fff',
+        title: {
+          text: '利差象限分析 (X=DR007绝对水平, Y=利差)',
+          left: 'center',
+          textStyle: { fontSize: 13, color: '#333' }
+        },
+        tooltip: {
+          formatter: function(params) {
+            const d = params.value;
+            const quadrant = d[1] >= 0 ? (d[0] >= policyRate ? '右上：全面收紧⚠️' : '左上：结构性紧张') : (d[0] >= policyRate ? '右下：政策干预' : '左下：极度宽松✅');
+            return `<b>${d[2] || ''}</b><br/>DR007: ${d[0].toFixed(2)}%<br/>利差: ${d[1]}bp<br/>象限: ${quadrant}`;
+          }
+        },
+        grid: { left: '12%', right: '5%', top: '15%', bottom: '10%' },
+        xAxis: {
+          type: 'value',
+          name: 'DR007(%)',
+          min: Math.floor(xMin * 10) / 10,
+          max: Math.ceil(xMax * 10) / 10,
+          splitLine: { show: true, lineStyle: { color: '#f0f0f0', type: 'dashed' } },
+          axisLabel: { fontSize: 10 }
+        },
+        yAxis: {
+          type: 'value',
+          name: '利差(bp)',
+          min: -Math.ceil(yAbsMax / 10) * 10,
+          max: Math.ceil(yAbsMax / 10) * 10,
+          splitLine: { show: true, lineStyle: { color: '#f0f0f0', type: 'dashed' } },
+          axisLabel: { fontSize: 10 }
+        },
+        // 象限分割线（markLine 替代 annotation）
+        series: [
+          {
+            type: 'scatter',
+            data: scatterData,
+            symbolSize: function(val) {
+              // 最近的点更大
+              const idx = scatterData.indexOf(val);
+              return idx >= len - 1 ? 14 : idx >= len - 5 ? 10 : 6;
+            },
+            itemStyle: {
+              color: function(params) {
+                const v = params.value;
+                // 左上: 低利率+正利差(橙), 右下: 高利率+负利差(蓝), 右上: 收紧(红), 左下: 宽松(绿)
+                if (v[1] >= 0 && v[0] >= policyRate) return '#ff4d4f';    // 右上：收紧
+                if (v[1] >= 0 && v[0] < policyRate) return '#faad14';     // 左上：结构性
+                if (v[1] < 0 && v[0] >= policyRate) return '#5470c6';     // 右下：干预
+                return '#52c41a';                                          // 左下：宽松
+              },
+              borderColor: '#fff',
+              borderWidth: 1
+            },
+            markLine: {
+              silent: true,
+              symbol: 'none',
+              data: [
+                { xAxis: policyRate, label: { formatter: '政策利率', position: 'start' }, lineStyle: { color: '#fc8452', type: 'dashed', width: 1.5 } },
+                { yAxis: 0, label: { formatter: '利差=0', position: 'start' }, lineStyle: { color: '#999', type: 'dashed', width: 1 } }
+              ]
+            },
+            markArea: {
+              silent: true,
+              data: [
+                [
+                  { xAxis: xMin, yAxis: 0, itemStyle: { color: 'rgba(82,196,26,0.06)' } },
+                  { xAxis: policyRate, yAxis: -yAbsMax }
+                ],
+                [
+                  { xAxis: policyRate, yAxis: 0, itemStyle: { color: 'rgba(255,77,79,0.06)' } },
+                  { xAxis: xMax, yAxis: yAbsMax }
+                ],
+                [
+                  { xAxis: xMin, yAxis: 0, itemStyle: { color: 'rgba(250,173,20,0.04)' } },
+                  { xAxis: policyRate, yAxis: yAbsMax }
+                ],
+                [
+                  { xAxis: policyRate, yAxis: -yAbsMax, itemStyle: { color: 'rgba(84,112,198,0.04)' } },
+                  { xAxis: xMax, yAxis: 0 }
+                ]
+              ]
+            }
+          }
+        ]
+      });
+    }
+  }
+
+  /**
    * 响应式调整所有图表
    */
   resizeAll() {

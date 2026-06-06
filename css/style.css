@@ -428,6 +428,36 @@ body {
   }
 }
 
+/* ========== DR007 象限分析专用布局 ========== */
+.dr007-body {
+  grid-template-columns: 1fr !important;
+}
+
+.dr007-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.dr007-charts .chart-container {
+  min-height: 380px;
+  border-right: 1px solid var(--border);
+}
+
+.dr007-charts .chart-container:last-child {
+  border-right: none;
+}
+
+@media (max-width: 900px) {
+  .dr007-charts {
+    grid-template-columns: 1fr;
+  }
+  .dr007-charts .chart-container {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
 /* ========== Chart Container ========== */
 .chart-container {
   padding: 16px;

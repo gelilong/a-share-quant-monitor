@@ -13,26 +13,35 @@ const INDICATOR_CONFIG = {
     indicators: [
       {
         id: 'dr007',
-        name: 'DR007',
-        fullName: '银行间7天质押式回购利率',
+        name: 'DR007 · 利差象限分析',
+        fullName: '银行间7天质押式回购利率 vs 政策利率',
         dataKey: 'macro.dr007',
-        chartType: 'line',
-        chartHeight: 300,
+        chartType: 'dr007_quadrant',
+        chartHeight: 420,
         fields: [
           { key: 'dates', label: '日期', type: 'x' },
-          { key: 'overnight', label: '隔夜(%)', type: 'y', color: '#5470c6' },
-          { key: 'week_1', label: '7天(%)', type: 'y', color: '#ee6666' }
+          { key: 'week_1', label: 'DR007(%)', type: 'y', color: '#ee6666' },
+          { key: 'policy_rate_line', label: '7天逆回购(政策利率)', type: 'y', color: '#fc8452', dashed: true },
+          { key: 'spread', label: '利差(bp)', type: 'y2', color: '#91cc75' }
         ],
-        description: `央行观察流动性最核心的锚。DR007是银行间市场7天期质押式回购的加权平均利率，反映了银行体系流动性的真实松紧程度。
+        y2AxisName: '利差(bp)',
+        policyRate: 1.50,
+        description: `央行观察流动性最核心的锚。DR007是银行间市场7天期质押式回购的加权平均利率，反映银行体系流动性的真实松紧程度。
+
+<b>象限分析：</b> X轴 = DR007绝对值，Y轴 = 利差(DR007-政策利率)
+• <b>左下象限(低利率+负利差)：</b>极度宽松，流动性泛滥，最利好股市
+• <b>左上象限(低利率+正利差)：</b>结构性紧张，短期冲击但基本面宽松
+• <b>右下象限(高利率+负利差)：</b>政策干预压制利率，需观察持续性
+• <b>右上象限(高利率+正利差)：</b>全面收紧，资金成本高企，利空股市
 
 <b>监控逻辑：</b>
-• 如果DR007持续低于政策利率（7天逆回购利率），说明银行间资金极度充裕，水早晚会漫向股市
-• 反之若DR007飙升突破政策利率并持续上行，则现货市场承压，资金成本上升压制估值
-• DR007与政策利率的利差是判断货币政策实际取向的核心指标`,
+• 利差持续为负 → 银行间资金极度充裕，水早晚漫向股市
+• 利差由负转正 → 流动性边际收紧的早期预警信号
+• DR007飙升+利差扩大 → 现货市场承压，估值面临压缩`,
         signals: [
-          { condition: '低于1.5%', level: '宽松', color: '#52c41a' },
-          { condition: '1.5%-1.8%', level: '中性', color: '#faad14' },
-          { condition: '高于1.8%', level: '偏紧', color: '#ff4d4f' }
+          { condition: '利差 < -10bp', level: '极度宽松', color: '#52c41a' },
+          { condition: '-10bp ~ +5bp', level: '中性', color: '#faad14' },
+          { condition: '利差 > +5bp', level: '偏紧收紧', color: '#ff4d4f' }
         ]
       },
       {
