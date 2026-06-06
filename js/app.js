@@ -89,8 +89,19 @@ class App {
   async loadAllData() {
     this.loading = true;
     this.showLoading(true);
+
+    // 检测 file:// 协议：如果 hostname 为空且非 localhost，直接用内嵌数据
+    const isFileProtocol = window.location.protocol === 'file:';
+    if (isFileProtocol && typeof SAMPLE_DATA !== 'undefined') {
+      this.data = SAMPLE_DATA;
+      this.loading = false;
+      this.showLoading(false);
+      this.updateLastUpdateTime();
+      console.log('文件协议模式 — 使用内嵌样本数据');
+      return;
+    }
     
-    // 本地模式使用 API 端点，GitHub Pages 使用文件路径
+    // 本地服务器模式用 API，远程/静态用文件路径
     const prefix = this.isLocal ? '/api/data/' : 'data/';
     const dataFiles = {
       macro: `${prefix}macro`,
@@ -107,16 +118,24 @@ class App {
         if (resp.ok) {
           this.data[key] = await resp.json();
         } else {
-          console.warn(`数据加载失败: ${path}`);
+          console.warn(`数据加载失败(${resp.status}): ${path}`);
           this.data[key] = null;
         }
       } catch (e) {
-        console.warn(`数据加载异常: ${path}`, e);
+        console.warn(`数据加载异常: ${path}`, e.message);
         this.data[key] = null;
       }
     });
     
     await Promise.all(promises);
+    
+    // 如果所有 fetch 都失败且有内嵌数据，回退到样本数据
+    const allNull = Object.values(this.data).every(v => v === null);
+    if (allNull && typeof SAMPLE_DATA !== 'undefined') {
+      console.log('Fetch 全部失败，回退到内嵌样本数据');
+      this.data = SAMPLE_DATA;
+    }
+    
     this.loading = false;
     this.showLoading(false);
     
