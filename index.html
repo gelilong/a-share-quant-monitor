@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="A股量化监控系统 - 五层20+指标体系，宏观至微观全覆盖">
   <title>A股量化监控系统 | 五层指标体系</title>
-  
+
   <!-- ECharts CDN -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
-  
+
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -21,6 +21,17 @@
         <div class="subtitle">宏观驱动 · 五层递进 · 20+指标全覆盖</div>
       </div>
       <div class="header-info">
+        <!-- 后台控制面板 -->
+        <div class="backend-control" id="backendControl">
+          <div class="backend-status">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="status-text" id="statusText">检测中...</span>
+          </div>
+          <button class="btn backend-toggle" id="backendToggle" onclick="backendControl.toggle()">
+            ▶ 启动后台
+          </button>
+          <span class="backend-meta" id="backendMeta"></span>
+        </div>
         <span id="lastUpdateTime">数据加载中...</span>
         <button class="refresh-btn" onclick="app.refreshAll()">🔄 刷新数据</button>
       </div>
@@ -53,8 +64,8 @@
           系统将自动从数据源拉取最新指标并生成可视化图表
         </p>
         <div style="margin-top: 24px; font-size: 13px; color: #999;">
-          <p>数据源: AKShare / 东方财富 / Tushare</p>
-          <p>更新频率: 每个交易日多次自动更新</p>
+          <p>数据源: AKShare / 东方财富</p>
+          <p>后台定时抓取 · 前台一键启停</p>
         </div>
       </div>
     </section>
@@ -63,10 +74,9 @@
   <!-- 底部信息 -->
   <footer class="app-footer">
     <p>
-      A股量化监控系统 v1.0 | 
-      数据来源：<a href="https://akshare.akfamily.xyz/" target="_blank">AKShare</a> / 
-      <a href="https://www.eastmoney.com/" target="_blank">东方财富</a> | 
-      部署于 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>
+      A股量化监控系统 v2.0 — 本地服务器版 |
+      数据来源：<a href="https://akshare.akfamily.xyz/" target="_blank">AKShare</a> /
+      <a href="https://www.eastmoney.com/" target="_blank">东方财富</a>
     </p>
     <p style="margin-top: 4px; font-size: 11px;">
       风险提示：本系统提供的信号仅供参考，不构成投资建议。投资有风险，入市需谨慎。
@@ -77,6 +87,7 @@
   <script src="js/indicators.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/stockManager.js"></script>
+  <script src="js/backendControl.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

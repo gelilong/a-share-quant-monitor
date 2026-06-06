@@ -67,6 +67,92 @@ body {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ========== Backend Control Panel ========== */
+.backend-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 20px;
+}
+
+.backend-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 80px;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.running {
+  background: #52c41a;
+  box-shadow: 0 0 6px rgba(82, 196, 26, 0.6);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-dot.stopped {
+  background: #ff4d4f;
+}
+
+.status-dot.disconnected {
+  background: #999;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+.status-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.backend-toggle {
+  padding: 4px 12px !important;
+  border-radius: 14px !important;
+  font-size: 12px !important;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.backend-toggle.start {
+  background: linear-gradient(135deg, #52c41a, #73d13d);
+  color: white;
+}
+
+.backend-toggle.start:hover {
+  background: linear-gradient(135deg, #389e0d, #52c41a);
+}
+
+.backend-toggle.stop {
+  background: linear-gradient(135deg, #ff4d4f, #ff7875);
+  color: white;
+}
+
+.backend-toggle.stop:hover {
+  background: linear-gradient(135deg, #cf1322, #ff4d4f);
+}
+
+.backend-meta {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #lastUpdateTime {
@@ -87,6 +173,12 @@ body {
 
 .refresh-btn:hover {
   background: rgba(255,255,255,0.25);
+}
+
+/* ========== Toast ========== */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* ========== Layer Navigation ========== */

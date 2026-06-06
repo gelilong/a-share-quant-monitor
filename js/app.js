@@ -7,13 +7,19 @@ class App {
     this.currentLayer = 'layer1';
     this.data = {};
     this.loading = false;
-    this.dataPath = 'data/';  // GitHub Pages上的数据路径
+    // 检测运行模式：本地服务器 vs GitHub Pages
+    this.isLocal = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1';
+    this.dataPath = this.isLocal ? '/api/data/' : 'data/';
   }
 
   /**
    * 初始化应用
    */
   async init() {
+    // 初始化后台控制（本地模式）
+    await backendControl.init();
+    
     // 渲染导航
     this.renderNav();
     
@@ -84,13 +90,15 @@ class App {
     this.loading = true;
     this.showLoading(true);
     
+    // 本地模式使用 API 端点，GitHub Pages 使用文件路径
+    const prefix = this.isLocal ? '/api/data/' : 'data/';
     const dataFiles = {
-      macro: `${this.dataPath}macro_liquidity.json`,
-      capital: `${this.dataPath}market_capital.json`,
-      microstructure: `${this.dataPath}market_microstructure.json`,
-      sector: `${this.dataPath}sector_rotation.json`,
-      stocks: `${this.dataPath}stock_microstructure.json`,
-      summary: `${this.dataPath}summary.json`
+      macro: `${prefix}macro`,
+      capital: `${prefix}capital`,
+      microstructure: `${prefix}microstructure`,
+      sector: `${prefix}sector`,
+      stocks: `${prefix}stocks`,
+      summary: `${prefix}summary`
     };
     
     const promises = Object.entries(dataFiles).map(async ([key, path]) => {
