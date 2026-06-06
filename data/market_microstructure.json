@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "layer": 3,
+    "layer_name": "大盘微观结构与情绪",
+    "description": "从衍生品、市场宽度和情绪指标推断市场真实强弱",
+    "update_time": "2026-06-06 13:30:00"
+  },
+  "indicators": {
+    "option_sentiment": {
+      "dates": [
+        "05-26",
+        "05-27",
+        "05-28",
+        "05-29",
+        "05-30",
+        "06-02",
+        "06-03",
+        "06-04",
+        "06-05",
+        "06-06"
+      ],
+      "pcr": [
+        1.05,
+        1.1,
+        1.15,
+        1.08,
+        1.02,
+        0.98,
+        1.05,
+        1.0,
+        0.95,
+        0.92
+      ],
+      "latest_pcr": 0.92,
+      "signal": "谨慎",
+      "update_time": "2026-06-06 13:30:00"
+    },
+    "market_breadth": {
+      "total_stocks": 5200,
+      "above_ma20_ratio": 48.5,
+      "above_ma60_ratio": 35.2,
+      "signal": "中性",
+      "update_time": "2026-06-06 13:30:00"
+    },
+    "limit_stocks": {
+      "limit_up_count": 68,
+      "limit_down_count": 12,
+      "ratio": 5.67,
+      "consecutive_count": 18,
+      "promote_rate": 26.5,
+      "sentiment": "活跃",
+      "update_time": "2026-06-06 13:30:00"
+    },
+    "correlation_index": {
+      "correlation": -0.35,
+      "signal": "跷跷板效应强(股债负相关)",
+      "update_time": "2026-06-06 13:30:00"
+    }
+  }
+}

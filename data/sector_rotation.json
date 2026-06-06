@@ -1,0 +1,228 @@
+{
+  "meta": {
+    "layer": 4,
+    "layer_name": "行业板块轮动",
+    "description": "监控行业拥挤度、相对强度、资金偏好及宏观产业结构",
+    "update_time": "2026-06-06 13:30:00"
+  },
+  "indicators": {
+    "sector_crowding": {
+      "total_volume": 11000,
+      "sectors": [
+        {
+          "name": "电子",
+          "volume": 1450,
+          "ratio": 13.2,
+          "change_pct": 2.5
+        },
+        {
+          "name": "计算机",
+          "volume": 1200,
+          "ratio": 10.9,
+          "change_pct": 3.1
+        },
+        {
+          "name": "医药生物",
+          "volume": 980,
+          "ratio": 8.9,
+          "change_pct": 1.2
+        },
+        {
+          "name": "电力设备",
+          "volume": 950,
+          "ratio": 8.6,
+          "change_pct": 1.8
+        },
+        {
+          "name": "食品饮料",
+          "volume": 820,
+          "ratio": 7.5,
+          "change_pct": -0.5
+        },
+        {
+          "name": "银行",
+          "volume": 780,
+          "ratio": 7.1,
+          "change_pct": 0.3
+        },
+        {
+          "name": "汽车",
+          "volume": 720,
+          "ratio": 6.5,
+          "change_pct": 2.2
+        },
+        {
+          "name": "传媒",
+          "volume": 680,
+          "ratio": 6.2,
+          "change_pct": 4.1
+        },
+        {
+          "name": "国防军工",
+          "volume": 620,
+          "ratio": 5.6,
+          "change_pct": 1.5
+        },
+        {
+          "name": "房地产",
+          "volume": 550,
+          "ratio": 5.0,
+          "change_pct": -1.2
+        }
+      ],
+      "max_crowding_ratio": 13.2,
+      "max_crowding_sector": "电子",
+      "warning": "正常",
+      "update_time": "2026-06-06 13:30:00"
+    },
+    "sector_rs": {
+      "sectors": [
+        {
+          "name": "传媒",
+          "change_20d": 12.5,
+          "change_5d": 4.1,
+          "latest_price": 2580.0,
+          "rs_score": 100.0
+        },
+        {
+          "name": "计算机",
+          "change_20d": 10.8,
+          "change_5d": 3.1,
+          "latest_price": 5120.0,
+          "rs_score": 88.0
+        },
+        {
+          "name": "电子",
+          "change_20d": 9.2,
+          "change_5d": 2.5,
+          "latest_price": 4580.0,
+          "rs_score": 75.2
+        },
+        {
+          "name": "电力设备",
+          "change_20d": 6.5,
+          "change_5d": 1.8,
+          "latest_price": 7200.0,
+          "rs_score": 53.6
+        },
+        {
+          "name": "医药生物",
+          "change_20d": 4.8,
+          "change_5d": 1.2,
+          "latest_price": 8900.0,
+          "rs_score": 40.0
+        },
+        {
+          "name": "银行",
+          "change_20d": 3.2,
+          "change_5d": 0.3,
+          "latest_price": 3250.0,
+          "rs_score": 27.2
+        },
+        {
+          "name": "食品饮料",
+          "change_20d": -1.5,
+          "change_5d": -0.5,
+          "latest_price": 16800.0,
+          "rs_score": 0
+        },
+        {
+          "name": "房地产",
+          "change_20d": -3.2,
+          "change_5d": -1.2,
+          "latest_price": 1850.0,
+          "rs_score": 0
+        }
+      ],
+      "top_sector": "传媒",
+      "update_time": "2026-06-06 13:30:00"
+    },
+    "etf_flow": {
+      "etf_flows": [
+        {
+          "sector": "半导体",
+          "count": 8,
+          "flow_indicator": 35.2
+        },
+        {
+          "sector": "芯片",
+          "count": 6,
+          "flow_indicator": 28.5
+        },
+        {
+          "sector": "医药",
+          "count": 12,
+          "flow_indicator": -12.3
+        },
+        {
+          "sector": "消费",
+          "count": 10,
+          "flow_indicator": 5.8
+        },
+        {
+          "sector": "证券",
+          "count": 5,
+          "flow_indicator": 18.6
+        },
+        {
+          "sector": "军工",
+          "count": 4,
+          "flow_indicator": 8.2
+        },
+        {
+          "sector": "计算机",
+          "count": 7,
+          "flow_indicator": 22.1
+        },
+        {
+          "sector": "AI",
+          "count": 5,
+          "flow_indicator": 42.8
+        },
+        {
+          "sector": "人工智能",
+          "count": 4,
+          "flow_indicator": 32.5
+        }
+      ],
+      "update_time": "2026-06-06 13:30:00"
+    },
+    "ppi_cpi_spread": {
+      "dates": [
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05"
+      ],
+      "cpi": [
+        0.3,
+        0.5,
+        0.2,
+        0.1,
+        0.0,
+        -0.1
+      ],
+      "ppi": [
+        -2.5,
+        -2.3,
+        -2.0,
+        -1.8,
+        -1.5,
+        -1.2
+      ],
+      "spread": [
+        -2.8,
+        -2.8,
+        -2.2,
+        -1.9,
+        -1.5,
+        -1.1
+      ],
+      "latest_spread": -1.1,
+      "signal": "利好中游制造(剪刀差收窄)",
+      "update_time": "2026-06-06 13:30:00"
+    }
+  }
+}

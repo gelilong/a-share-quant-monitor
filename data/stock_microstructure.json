@@ -1,0 +1,270 @@
+{
+  "meta": {
+    "layer": 5,
+    "layer_name": "个股微观结构",
+    "description": "监控个股订单流、波动率、主力资金及技术位置",
+    "update_time": "2026-06-06 13:30:00",
+    "total_stocks": 12
+  },
+  "stocks": [
+    {
+      "code": "600519",
+      "name": "贵州茅台",
+      "latest_price": 1680.5,
+      "change_5d": 2.3,
+      "change_20d": 5.8,
+      "ofi": 12.5,
+      "idio_volatility": 18.3,
+      "beta": 0.85,
+      "large_order_ratio": 115.0,
+      "stop_loss_distance": 6.2,
+      "ma5": 1665.0,
+      "ma20": 1620.0,
+      "ma60": 1580.0,
+      "score": 3.0,
+      "action": "买入",
+      "reasons": [
+        "OFI偏多",
+        "站上20日均线",
+        "放量"
+      ]
+    },
+    {
+      "code": "300750",
+      "name": "宁德时代",
+      "latest_price": 245.3,
+      "change_5d": -1.2,
+      "change_20d": 8.5,
+      "ofi": -5.3,
+      "idio_volatility": 28.6,
+      "beta": 1.35,
+      "large_order_ratio": 95.0,
+      "stop_loss_distance": 4.8,
+      "ma5": 248.0,
+      "ma20": 235.0,
+      "ma60": 220.0,
+      "score": 0.5,
+      "action": "持有",
+      "reasons": [
+        "站上20日均线",
+        "缩量"
+      ]
+    },
+    {
+      "code": "002594",
+      "name": "比亚迪",
+      "latest_price": 312.8,
+      "change_5d": 4.5,
+      "change_20d": 15.2,
+      "ofi": 18.2,
+      "idio_volatility": 32.1,
+      "beta": 1.15,
+      "large_order_ratio": 135.0,
+      "stop_loss_distance": 7.5,
+      "ma5": 305.0,
+      "ma20": 285.0,
+      "ma60": 270.0,
+      "score": 4.0,
+      "action": "买入",
+      "reasons": [
+        "OFI偏多",
+        "站上20日均线",
+        "放量"
+      ]
+    },
+    {
+      "code": "601318",
+      "name": "中国平安",
+      "latest_price": 52.6,
+      "change_5d": 1.8,
+      "change_20d": 3.2,
+      "ofi": 8.5,
+      "idio_volatility": 15.2,
+      "beta": 0.72,
+      "large_order_ratio": 108.0,
+      "stop_loss_distance": 5.5,
+      "ma5": 52.0,
+      "ma20": 51.0,
+      "ma60": 49.5,
+      "score": 2.5,
+      "action": "买入",
+      "reasons": [
+        "OFI偏多",
+        "站上20日均线"
+      ]
+    },
+    {
+      "code": "000858",
+      "name": "五粮液",
+      "latest_price": 158.2,
+      "change_5d": -0.8,
+      "change_20d": 2.5,
+      "ofi": -3.2,
+      "idio_volatility": 22.5,
+      "beta": 0.92,
+      "large_order_ratio": 88.0,
+      "stop_loss_distance": 3.2,
+      "ma5": 159.0,
+      "ma20": 155.0,
+      "ma60": 152.0,
+      "score": 0.5,
+      "action": "持有",
+      "reasons": [
+        "站上20日均线",
+        "缩量"
+      ]
+    },
+    {
+      "code": "600036",
+      "name": "招商银行",
+      "latest_price": 42.8,
+      "change_5d": 0.5,
+      "change_20d": 6.8,
+      "ofi": 5.8,
+      "idio_volatility": 16.8,
+      "beta": 0.65,
+      "large_order_ratio": 105.0,
+      "stop_loss_distance": 4.5,
+      "ma5": 42.5,
+      "ma20": 40.5,
+      "ma60": 38.0,
+      "score": 2.0,
+      "action": "买入",
+      "reasons": [
+        "OFI偏多",
+        "站上20日均线"
+      ]
+    },
+    {
+      "code": "000001",
+      "name": "平安银行",
+      "latest_price": 12.35,
+      "change_5d": -2.5,
+      "change_20d": -1.2,
+      "ofi": -12.3,
+      "idio_volatility": 25.8,
+      "beta": 0.55,
+      "large_order_ratio": 78.0,
+      "stop_loss_distance": 2.8,
+      "ma5": 12.5,
+      "ma20": 12.5,
+      "ma60": 12.8,
+      "score": -2.0,
+      "action": "卖出",
+      "reasons": [
+        "OFI偏空",
+        "缩量"
+      ]
+    },
+    {
+      "code": "000002",
+      "name": "万科A",
+      "latest_price": 8.52,
+      "change_5d": -4.2,
+      "change_20d": -8.5,
+      "ofi": -18.5,
+      "idio_volatility": 38.5,
+      "beta": 0.95,
+      "large_order_ratio": 72.0,
+      "stop_loss_distance": 1.5,
+      "ma5": 8.8,
+      "ma20": 9.2,
+      "ma60": 9.5,
+      "score": -4.0,
+      "action": "卖出",
+      "reasons": [
+        "OFI偏空",
+        "跌破20日均线",
+        "特质波动率高",
+        "缩量"
+      ]
+    },
+    {
+      "code": "601899",
+      "name": "紫金矿业",
+      "latest_price": 18.25,
+      "change_5d": 6.2,
+      "change_20d": 12.8,
+      "ofi": 15.8,
+      "idio_volatility": 35.2,
+      "beta": 1.25,
+      "large_order_ratio": 142.0,
+      "stop_loss_distance": 8.5,
+      "ma5": 17.5,
+      "ma20": 16.5,
+      "ma60": 15.8,
+      "score": 3.5,
+      "action": "买入",
+      "reasons": [
+        "OFI偏多",
+        "站上20日均线",
+        "放量"
+      ]
+    },
+    {
+      "code": "603259",
+      "name": "药明康德",
+      "latest_price": 62.3,
+      "change_5d": -3.5,
+      "change_20d": -5.8,
+      "ofi": -15.2,
+      "idio_volatility": 42.5,
+      "beta": 1.45,
+      "large_order_ratio": 68.0,
+      "stop_loss_distance": 2.2,
+      "ma5": 63.5,
+      "ma20": 65.0,
+      "ma60": 68.0,
+      "score": -4.5,
+      "action": "卖出",
+      "reasons": [
+        "OFI偏空",
+        "跌破20日均线",
+        "特质波动率高",
+        "缩量"
+      ]
+    },
+    {
+      "code": "600900",
+      "name": "长江电力",
+      "latest_price": 28.5,
+      "change_5d": 0.8,
+      "change_20d": 2.2,
+      "ofi": 4.5,
+      "idio_volatility": 12.5,
+      "beta": 0.38,
+      "large_order_ratio": 98.0,
+      "stop_loss_distance": 4.2,
+      "ma5": 28.3,
+      "ma20": 28.0,
+      "ma60": 27.5,
+      "score": 1.5,
+      "action": "持有",
+      "reasons": [
+        "站上20日均线"
+      ]
+    },
+    {
+      "code": "688981",
+      "name": "中芯国际",
+      "latest_price": 72.5,
+      "change_5d": 8.5,
+      "change_20d": 18.2,
+      "ofi": 22.3,
+      "idio_volatility": 45.8,
+      "beta": 1.85,
+      "large_order_ratio": 165.0,
+      "stop_loss_distance": 9.5,
+      "ma5": 68.0,
+      "ma20": 62.0,
+      "ma60": 58.0,
+      "score": 4.5,
+      "action": "买入",
+      "reasons": [
+        "OFI偏多",
+        "站上20日均线",
+        "放量"
+      ]
+    }
+  ]
+}

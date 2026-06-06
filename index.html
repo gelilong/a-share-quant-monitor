@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A股量化监控系统 - 五层20+指标体系，宏观至微观全覆盖">
+  <title>A股量化监控系统 | 五层指标体系</title>
+  
+  <!-- ECharts CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 顶部 Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>📊 A股量化监控系统</h1>
+        <div class="subtitle">宏观驱动 · 五层递进 · 20+指标全覆盖</div>
+      </div>
+      <div class="header-info">
+        <span id="lastUpdateTime">数据加载中...</span>
+        <button class="refresh-btn" onclick="app.refreshAll()">🔄 刷新数据</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 五层导航 -->
+  <nav class="layer-nav" id="layerNav">
+    <!-- JS动态渲染 -->
+  </nav>
+
+  <!-- 加载指示器 -->
+  <div class="loading-indicator" id="loadingIndicator">
+    <div class="spinner"></div>
+    <span>正在加载数据...</span>
+  </div>
+
+  <!-- 主内容区 -->
+  <main class="content-area">
+    <!-- 自选股管理 -->
+    <section id="watchlistContainer"></section>
+
+    <!-- 层级内容 -->
+    <section id="layerContent">
+      <div class="empty-state" style="padding: 60px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+        <h2>欢迎使用 A股量化监控系统</h2>
+        <p style="margin-top: 8px; color: #666;">
+          请点击上方导航选择监控层级<br>
+          系统将自动从数据源拉取最新指标并生成可视化图表
+        </p>
+        <div style="margin-top: 24px; font-size: 13px; color: #999;">
+          <p>数据源: AKShare / 东方财富 / Tushare</p>
+          <p>更新频率: 每个交易日多次自动更新</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 底部信息 -->
+  <footer class="app-footer">
+    <p>
+      A股量化监控系统 v1.0 | 
+      数据来源：<a href="https://akshare.akfamily.xyz/" target="_blank">AKShare</a> / 
+      <a href="https://www.eastmoney.com/" target="_blank">东方财富</a> | 
+      部署于 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>
+    </p>
+    <p style="margin-top: 4px; font-size: 11px;">
+      风险提示：本系统提供的信号仅供参考，不构成投资建议。投资有风险，入市需谨慎。
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/indicators.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/stockManager.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
